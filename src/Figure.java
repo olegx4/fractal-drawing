@@ -23,4 +23,18 @@ public class Figure {
         this.figureTopPoints = figureTopPoints;
         return this;
     }
+
+    public Point findCentralPoint(Point firstPoint, Point secondPoint) {
+        int x = (int) (firstPoint.getX() + secondPoint.getX()) / 2;
+        int y = (int) (firstPoint.getY() + secondPoint.getY()) / 2;
+        return new Point(x, y);
+    }
+
+    public void addPointInsideFigure(Point point) {
+        pointsInsideFigure.add(point);
+    }
+
+    public void addTopFigurePoint(Point point) {
+        pointsInsideFigure.add(point);
+    }
 }
