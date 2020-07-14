@@ -11,13 +11,13 @@ public class FractalDrawingPanel extends JPanel {
         this.figure = figure;
         this.firstPoint = firstPoint;
         this.currentPoint = firstPoint;
+        calculateFractal();
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        calculateFractal(g);
         drawFractal(g);
-        drawFigure(g);
+        //drawFigure(g);
     }
 
     private void drawFigure(Graphics g) {
@@ -25,16 +25,15 @@ public class FractalDrawingPanel extends JPanel {
 
         for (Point p : figure.getFigureTopPoints()) {
             int pointDiameter = 10;
-            g.drawOval((int) p.getX(), (int) p.getY(), pointDiameter, pointDiameter);
+            g.setColor(Color.red);
+            g.fillOval((int) p.getX() - 3, (int) p.getY() - 3, pointDiameter, pointDiameter);
         }
     }
 
-    private void calculateFractal(Graphics g) {
+    private void calculateFractal() {
         Random random = new Random();
-        int randomInt;
         for (int i = 0; i < 1_000_000; i++) {
-            randomInt = random.nextInt(figure.getFigureTopPoints().size());
-            //int topIndex = rule.findIndexOfTop(randomInt);
+            int randomInt = random.nextInt(figure.getFigureTopPoints().size());
             currentPoint = figure.findCentralPoint(currentPoint, figure.getFigureTopPoints().get(randomInt));
             figure.addPointInsideFigure(currentPoint);
         }
@@ -42,6 +41,7 @@ public class FractalDrawingPanel extends JPanel {
 
     private void drawFractal(Graphics g) {
         for (Point p : figure.getPointsInsideFigure()) {
+            g.setColor(Color.cyan);
             g.drawOval((int) p.getX(), (int) p.getY(), 1, 1);
         }
     }
