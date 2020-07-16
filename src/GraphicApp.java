@@ -19,6 +19,7 @@ public class GraphicApp {
 
     private void createFrame() {
         frame = new JFrame("Fractal-drawing-app");
+        frame.setBackground(Color.black);
         frame.setSize(1980, 1080);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

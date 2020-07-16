@@ -24,9 +24,9 @@ public class Figure {
         return this;
     }
 
-    public Point findCentralPoint(Point firstPoint, Point secondPoint) {
-        int x = (int) (firstPoint.getX() + secondPoint.getX()) / 2;
-        int y = (int) (firstPoint.getY() + secondPoint.getY()) / 2;
+    public Point findPointBetweenCoordinates(Point firstPoint, Point secondPoint, int coef) {
+        int x = (int) (firstPoint.getX() + (coef * secondPoint.getX())) / (2 + coef - 1);
+        int y = (int) (firstPoint.getY() + (coef * secondPoint.getY())) / (2 + coef - 1);
         return new Point(x, y);
     }
 

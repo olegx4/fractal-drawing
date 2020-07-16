@@ -25,7 +25,7 @@ public class FractalDrawingPanel extends JPanel {
 
         for (Point p : figure.getFigureTopPoints()) {
             int pointDiameter = 10;
-            g.setColor(Color.red);
+            g.setColor(Color.yellow);
             g.fillOval((int) p.getX() - 3, (int) p.getY() - 3, pointDiameter, pointDiameter);
         }
     }
@@ -34,14 +34,14 @@ public class FractalDrawingPanel extends JPanel {
         Random random = new Random();
         for (int i = 0; i < 1_000_000; i++) {
             int randomInt = random.nextInt(figure.getFigureTopPoints().size());
-            currentPoint = figure.findCentralPoint(currentPoint, figure.getFigureTopPoints().get(randomInt));
+            currentPoint = figure.findPointBetweenCoordinates(currentPoint, figure.getFigureTopPoints().get(randomInt), 2);
             figure.addPointInsideFigure(currentPoint);
         }
     }
 
     private void drawFractal(Graphics g) {
         for (Point p : figure.getPointsInsideFigure()) {
-            g.setColor(Color.cyan);
+            g.setColor(Color.green);
             g.drawOval((int) p.getX(), (int) p.getY(), 1, 1);
         }
     }
