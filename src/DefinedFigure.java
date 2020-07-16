@@ -6,8 +6,8 @@ public class DefinedFigure {
     final List<Point> triangle = List.of(
             new Point(600, 100),
             new Point(300, 700),
-            new Point(900, 700),
-            new Point(600, 500));
+            new Point(600, 500),
+            new Point(900, 700));
 
     final List<Point> square = List.of(
             new Point(100, 100),
