@@ -1,18 +1,14 @@
 import java.awt.*;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
         final Point firstPoint = new Point(600, 500);
-        final DefinedFigure definedFigure = new DefinedFigure();
+        final FractalDrawingPanel panel = new FractalDrawingPanel(firstPoint);
 
-        final List<Point> figureTops = definedFigure.triangle;
-        final Figure figure = new Figure().setFigureTopPoints(figureTops);
-
-        final FractalDrawingPanel panel = new FractalDrawingPanel(figure, firstPoint);
-
-        final GraphicApp app = new GraphicApp(panel);
-        app.show();
+        EventQueue.invokeLater(() -> {
+            final GraphicApp app = new GraphicApp(panel);
+            app.show();
+        });
     }
 }
