@@ -8,11 +8,11 @@ public class Main {
         final DefinedFigure definedFigure = new DefinedFigure();
 
         final List<Point> figureTops = definedFigure.triangle;
-        Figure figure = new Figure().setFigureTopPoints(figureTops);
+        final Figure figure = new Figure().setFigureTopPoints(figureTops);
 
         final FractalDrawingPanel panel = new FractalDrawingPanel(figure, firstPoint);
 
-        GraphicApp app = new GraphicApp(panel);
+        final GraphicApp app = new GraphicApp(panel);
         app.show();
     }
 }

@@ -12,7 +12,7 @@ public class GraphicApp {
     }
 
     private void initComponents() {
-        Container mainContainer = frame.getContentPane();
+        final Container mainContainer = frame.getContentPane();
         panel.setBackground(Color.BLACK);
         mainContainer.add(panel);
     }
