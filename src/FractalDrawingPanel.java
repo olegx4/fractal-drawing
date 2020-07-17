@@ -12,6 +12,7 @@ public class FractalDrawingPanel extends JPanel {
     private Figure figure = new Figure();
     private final Point firstPoint;
     private Point currentPoint;
+    private boolean drawLines = false;
 
     public FractalDrawingPanel(Point firstPoint) {
         this.firstPoint = firstPoint;
@@ -38,20 +39,26 @@ public class FractalDrawingPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
+                figure = new Figure();
                 if (e.getKeyChar() == 'r') {
-                    figure = new Figure();
-                    figure.setRandomFigureTops();
-                    calculateFractal();
-                    repaint();
+                    drawLines = false;
+                } else if (e.getKeyChar() == 'l') {
+                    drawLines = true;
                 }
+                figure.setRandomFigureTops();
+                calculateFractal();
+                repaint();
             }
         });
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        //drawFractalLines(g);
-        drawFractal(g);
+        if (drawLines) {
+            drawFractalLines(g);
+        } else {
+            drawFractal(g);
+        }
         drawFigure(g);
     }
 
@@ -67,10 +74,16 @@ public class FractalDrawingPanel extends JPanel {
         }
     }
 
-    private void calculateFractal() {
+    public void calculateFractal() {
         if (figure.getFigureTopPoints().size() != 0) {
             Random random = new Random();
-            for (int i = 0; i < 1_000_000; i++) {
+            int iterations;
+            if (drawLines) {
+                iterations = 500;
+            } else {
+                iterations = 1_000_000;
+            }
+            for (int i = 0; i < iterations; i++) {
                 int randomInt = random.nextInt(figure.getFigureTopPoints().size());
                 currentPoint = figure.findPointBetweenCoordinates(currentPoint, figure.getFigureTopPoints().get(randomInt), 2);
                 figure.addPointInsideFigure(currentPoint);
