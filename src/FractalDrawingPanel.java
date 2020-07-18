@@ -4,19 +4,20 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Random;
 
 import static java.util.Objects.isNull;
 
 public class FractalDrawingPanel extends JPanel {
+    private final int LINE_ITERATIONS = 100;
+    private final int CHAOS_GAME_ITERATIONS = 1_000_000;
     private Figure figure = new Figure();
     private final Point firstPoint;
-    private Point currentPoint;
     private boolean drawLines = false;
+    private final PointCalculator pointCalculator = new PointCalculator();
+    private int currentIterations = CHAOS_GAME_ITERATIONS;
 
     public FractalDrawingPanel(Point firstPoint) {
         this.firstPoint = firstPoint;
-        this.currentPoint = firstPoint;
         this.setFocusable(true);
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -24,10 +25,12 @@ public class FractalDrawingPanel extends JPanel {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     figure.addTopFigurePoint(new Point(e.getX(), e.getY()));
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (figure.getPointsInsideFigure().size() != 0) {
-                        figure.getPointsInsideFigure().clear();
-                    }
-                    calculateFractal();
+                    figure.getPointsInsideFigure().clear();
+                    figure.setPointsInsideFigure(
+                            pointCalculator.calculateChaosGameFractalPoints(
+                                    figure.getFigureTopPoints(),
+                                    currentIterations,
+                                    firstPoint));
                 } else if (e.getButton() == MouseEvent.BUTTON2) {
                     figure = new Figure();
                 }
@@ -42,11 +45,17 @@ public class FractalDrawingPanel extends JPanel {
                 figure = new Figure();
                 if (e.getKeyChar() == 'r') {
                     drawLines = false;
+                    currentIterations = CHAOS_GAME_ITERATIONS;
                 } else if (e.getKeyChar() == 'l') {
                     drawLines = true;
+                    currentIterations = LINE_ITERATIONS;
                 }
                 figure.setRandomFigureTops();
-                calculateFractal();
+                figure.setPointsInsideFigure(
+                        pointCalculator.calculateChaosGameFractalPoints(
+                                figure.getFigureTopPoints(),
+                                currentIterations,
+                                firstPoint));
                 repaint();
             }
         });
@@ -70,23 +79,6 @@ public class FractalDrawingPanel extends JPanel {
                 int pointDiameter = 10;
                 g.setColor(Color.red);
                 g.fillOval((int) p.getX() - 3, (int) p.getY() - 3, pointDiameter, pointDiameter);
-            }
-        }
-    }
-
-    public void calculateFractal() {
-        if (figure.getFigureTopPoints().size() != 0) {
-            Random random = new Random();
-            int iterations;
-            if (drawLines) {
-                iterations = 500;
-            } else {
-                iterations = 1_000_000;
-            }
-            for (int i = 0; i < iterations; i++) {
-                int randomInt = random.nextInt(figure.getFigureTopPoints().size());
-                currentPoint = figure.findPointBetweenCoordinates(currentPoint, figure.getFigureTopPoints().get(randomInt), 2);
-                figure.addPointInsideFigure(currentPoint);
             }
         }
     }

@@ -25,12 +25,6 @@ public class Figure {
         return this;
     }
 
-    public Point findPointBetweenCoordinates(Point firstPoint, Point secondPoint, int coef) {
-        int x = (int) (firstPoint.getX() + (coef * secondPoint.getX())) / (1 + coef);
-        int y = (int) (firstPoint.getY() + (coef * secondPoint.getY())) / (1 + coef);
-        return new Point(x, y);
-    }
-
     public void addPointInsideFigure(Point point) {
         pointsInsideFigure.add(point);
     }
