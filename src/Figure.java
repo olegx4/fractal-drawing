@@ -33,11 +33,11 @@ public class Figure {
         figureTopPoints.add(point);
     }
 
-    public void setRandomFigureTops() {
+    public void setRandomFigureTops(int xLimit, int yLimit) {
         Random random = new Random();
         int numberOfTops = random.nextInt(10) + 3;
         for (int i = 0; i < numberOfTops; i++) {
-            Point point = new Point(random.nextInt(1930), random.nextInt(1030));
+            Point point = new Point(random.nextInt(xLimit), random.nextInt(yLimit));
             addTopFigurePoint(point);
         }
     }

@@ -16,7 +16,6 @@ public class FractalDrawingPanel extends JPanel {
     private int currentIterations = CHAOS_GAME_ITERATIONS;
     private Figure figure = new Figure();
 
-
     public FractalDrawingPanel(Point firstPoint) {
         this.firstPoint = firstPoint;
         this.setFocusable(true);
@@ -95,7 +94,7 @@ public class FractalDrawingPanel extends JPanel {
                 drawLines = true;
                 currentIterations = LINE_ITERATIONS;
             }
-            figure.setRandomFigureTops();
+            figure.setRandomFigureTops(getWidth(), getHeight());
             figure.setPointsInsideFigure(
                     pointCalculator.calculateChaosGameFractalPoints(
                             figure.getFigureTopPoints(),
