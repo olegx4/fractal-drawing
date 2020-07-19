@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 
@@ -12,7 +13,7 @@ public class FractalDrawingPanel extends JPanel {
     private final int CHAOS_GAME_ITERATIONS = 1_000_000;
     private final Point firstPoint;
     private final PointCalculator pointCalculator = new PointCalculator();
-    private boolean drawLines = false;
+    private String fractalType = FractalType.ChaosGame.toString();
     private int currentIterations = CHAOS_GAME_ITERATIONS;
     private Figure figure = new Figure();
 
@@ -25,10 +26,12 @@ public class FractalDrawingPanel extends JPanel {
 
     public void paint(Graphics g) {
         super.paint(g);
-        if (drawLines) {
-            drawFractalLines(g);
-        } else {
+        if (fractalType.equals(FractalType.Linear.name())) {
+            drawLines(g, figure.getPointsInsideFigure());
+        } else if (fractalType.equals(FractalType.ChaosGame.name())) {
             drawFractal(g);
+        } else {
+            drawLines(g, figure.getPointsInsideFigure());
         }
         drawFigure(g);
     }
@@ -54,11 +57,11 @@ public class FractalDrawingPanel extends JPanel {
         }
     }
 
-    private void drawFractalLines(Graphics g) {
-        for (int i = 1; i < figure.getPointsInsideFigure().size(); i++) {
+    private void drawLines(Graphics g, List<Point> points) {
+        for (int i = 1; i < points.size(); i++) {
             g.setColor(Color.green);
-            Point p = figure.getPointsInsideFigure().get(i - 1);
-            Point p2 = figure.getPointsInsideFigure().get(i);
+            Point p = points.get(i - 1);
+            Point p2 = points.get(i);
             g.drawLine((int) p.getX(), (int) p.getY(), (int) p2.getX(), (int) p2.getY());
         }
     }
@@ -86,14 +89,35 @@ public class FractalDrawingPanel extends JPanel {
         @Override
         public void keyPressed(KeyEvent e) {
             super.keyPressed(e);
-            figure = new Figure();
             if (e.getKeyChar() == 'r') {
-                drawLines = false;
+                fractalType = FractalType.ChaosGame.toString();
                 currentIterations = CHAOS_GAME_ITERATIONS;
+                makeRandomActions();
             } else if (e.getKeyChar() == 'l') {
-                drawLines = true;
+                fractalType = FractalType.Linear.toString();
                 currentIterations = LINE_ITERATIONS;
+                makeRandomActions();
+            } else if (e.getKeyChar() == 'd') {
+                fractalType = FractalType.Dragon.toString();
+                if (currentIterations > 20) {
+                    currentIterations = 1;
+                }
+                figure.setPointsInsideFigure(
+                        pointCalculator.calculateDragonCurvePoints(
+                                figure.getFigureTopPoints(),
+                                currentIterations,
+                                90));
+                figure.setFigureTopPoints(figure.getPointsInsideFigure());
+                repaint();
+            } else if (e.getKeyChar() == 'i') {
+                currentIterations = ++currentIterations;
+                figure.getPointsInsideFigure().clear();
+            } else if (e.getKeyChar() == 'q') {
+                currentIterations = 1;
             }
+        }
+
+        private void makeRandomActions() {
             figure.setRandomFigureTops(getWidth(), getHeight());
             figure.setPointsInsideFigure(
                     pointCalculator.calculateChaosGameFractalPoints(
