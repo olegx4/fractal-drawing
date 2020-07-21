@@ -16,6 +16,7 @@ public class FractalDrawingPanel extends JPanel {
     private String fractalType = FractalType.ChaosGame.toString();
     private int currentIterations = CHAOS_GAME_ITERATIONS;
     private Figure figure = new Figure();
+    private boolean showTopPoints = true;
 
     public FractalDrawingPanel(Point firstPoint) {
         this.firstPoint = firstPoint;
@@ -33,7 +34,9 @@ public class FractalDrawingPanel extends JPanel {
         } else {
             drawLines(g, figure.getPointsInsideFigure());
         }
-        drawFigure(g);
+        if (showTopPoints) {
+            drawFigure(g);
+        }
     }
 
     private void drawFigure(Graphics g) {
@@ -101,6 +104,7 @@ public class FractalDrawingPanel extends JPanel {
                 fractalType = FractalType.Dragon.toString();
                 if (currentIterations > 20) {
                     currentIterations = 1;
+                    figure = new Figure();
                 }
                 figure.setPointsInsideFigure(
                         pointCalculator.calculateDragonCurvePoints(
@@ -114,10 +118,14 @@ public class FractalDrawingPanel extends JPanel {
                 figure.getPointsInsideFigure().clear();
             } else if (e.getKeyChar() == 'q') {
                 currentIterations = 1;
+            } else if (e.getKeyChar() == 'h') {
+                showTopPoints = !showTopPoints;
+                repaint();
             }
         }
 
         private void makeRandomActions() {
+            figure = new Figure();
             figure.setRandomFigureTops(getWidth(), getHeight());
             figure.setPointsInsideFigure(
                     pointCalculator.calculateChaosGameFractalPoints(
