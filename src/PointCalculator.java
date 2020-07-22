@@ -36,13 +36,13 @@ public class PointCalculator {
         return result;
     }
 
-    private Point findPointBetweenTwoCoordinates(Point firstPoint, Point secondPoint, int coef) {
-        int x = (int) (firstPoint.getX() + (coef * secondPoint.getX())) / (1 + coef);
-        int y = (int) (firstPoint.getY() + (coef * secondPoint.getY())) / (1 + coef);
+    private Point findPointBetweenTwoCoordinates(Point firstPoint, Point secondPoint, int coefficient) {
+        int x = (int) (firstPoint.getX() + (coefficient * secondPoint.getX())) / (1 + coefficient);
+        int y = (int) (firstPoint.getY() + (coefficient * secondPoint.getY())) / (1 + coefficient);
         return new Point(x, y);
     }
 
-    private Point rotatePointCoordinatesOn(Point currentPoint, int degree, Point centralPoint) {
+    protected Point rotatePointCoordinatesOn(Point currentPoint, int degree, Point centralPoint) {
         int x0 = (int) centralPoint.getX();
         int y0 = (int) centralPoint.getY();
         int x = (int) currentPoint.getX();

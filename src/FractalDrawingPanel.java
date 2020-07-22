@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -15,14 +12,23 @@ public class FractalDrawingPanel extends JPanel {
     private final PointCalculator pointCalculator = new PointCalculator();
     private String fractalType = FractalType.ChaosGame.toString();
     private int currentIterations = CHAOS_GAME_ITERATIONS;
-    private Figure figure = new Figure();
+    private FigureTransformer figure = new FigureTransformer();
     private boolean showTopPoints = true;
+    final Action action = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            figure.rotateFigureOn(-90, new Point(getWidth() / 2, getHeight() / 2));
+        }
+    };
+    final KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK);
 
     public FractalDrawingPanel(Point firstPoint) {
         this.firstPoint = firstPoint;
         this.setFocusable(true);
         this.addMouseListener(new MouseCatcher());
         this.addKeyListener(new KeyCatcher());
+        this.getActionMap().put("Rotate figure left", action);
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, "Rotate figure left");
     }
 
     public void paint(Graphics g) {
@@ -82,7 +88,7 @@ public class FractalDrawingPanel extends JPanel {
                                 currentIterations,
                                 firstPoint));
             } else if (e.getButton() == MouseEvent.BUTTON2) {
-                figure = new Figure();
+                figure = new FigureTransformer();
             }
             repaint();
         }
@@ -104,14 +110,18 @@ public class FractalDrawingPanel extends JPanel {
                 fractalType = FractalType.Dragon.toString();
                 if (currentIterations > 20) {
                     currentIterations = 1;
-                    figure = new Figure();
                 }
-                figure.setPointsInsideFigure(
-                        pointCalculator.calculateDragonCurvePoints(
-                                figure.getFigureTopPoints(),
-                                currentIterations,
-                                90));
-                figure.setFigureTopPoints(figure.getPointsInsideFigure());
+                try {
+                    figure.setPointsInsideFigure(
+                            pointCalculator.calculateDragonCurvePoints(
+                                    figure.getFigureTopPoints(),
+                                    currentIterations,
+                                    90));
+                    figure.setFigureTopPoints(figure.getPointsInsideFigure());
+                } catch (OutOfMemoryError ex) {
+                    System.out.println("Out of memory");
+                    figure = new FigureTransformer();
+                }
                 repaint();
             } else if (e.getKeyChar() == 'i') {
                 currentIterations = ++currentIterations;
@@ -121,11 +131,30 @@ public class FractalDrawingPanel extends JPanel {
             } else if (e.getKeyChar() == 'h') {
                 showTopPoints = !showTopPoints;
                 repaint();
+            } else if (e.getKeyChar() == 'Z') {
+                figure.zoomFigure(2);
+                repaint();
+            } else if (e.getKeyChar() == 'z') {
+                figure.zoomFigure(0.5);
+                repaint();
+            } else if (e.getKeyCode() >= 37 && e.getKeyCode() <= 40) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT && e.isShiftDown()) {
+                    figure.rotateFigureOn(90, new Point(getWidth() / 2, getHeight() / 2));
+                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    figure.moveXCoordinatesOn(50);
+                } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    figure.moveXCoordinatesOn(-50);
+                } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    figure.moveYCoordinatesOn(-50);
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    figure.moveYCoordinatesOn(50);
+                }
+                repaint();
             }
         }
 
         private void makeRandomActions() {
-            figure = new Figure();
+            figure = new FigureTransformer();
             figure.setRandomFigureTops(getWidth(), getHeight());
             figure.setPointsInsideFigure(
                     pointCalculator.calculateChaosGameFractalPoints(

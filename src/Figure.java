@@ -11,18 +11,16 @@ public class Figure {
         return pointsInsideFigure;
     }
 
-    public Figure setPointsInsideFigure(List<Point> pointsInsideFigure) {
+    public void setPointsInsideFigure(List<Point> pointsInsideFigure) {
         this.pointsInsideFigure = pointsInsideFigure;
-        return this;
     }
 
     public List<Point> getFigureTopPoints() {
         return figureTopPoints;
     }
 
-    public Figure setFigureTopPoints(List<Point> figureTopPoints) {
+    public void setFigureTopPoints(List<Point> figureTopPoints) {
         this.figureTopPoints = figureTopPoints;
-        return this;
     }
 
     public void addPointInsideFigure(Point point) {
