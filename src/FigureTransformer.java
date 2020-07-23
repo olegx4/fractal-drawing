@@ -79,10 +79,36 @@ public class FigureTransformer extends Figure {
         return result;
     }
 
+    public List<Point> zoomCoordinates(List<Point> points, double coefficient, Point centralPoint) {
+        List<Point> result = new ArrayList<>();
+        if (points.size() > 0) {
+            for (Point point : points) {
+                final int resultX = (int) ((coefficient > 1)
+                        ? ((point.getX()) * coefficient) - centralPoint.getX()
+                        : ((point.getX() - centralPoint.getX()) * coefficient) + centralPoint.getX());
+                final int resultY = (int) ((coefficient > 1)
+                        ? ((point.getY()) * coefficient) - centralPoint.getY()
+                        : ((point.getY() - centralPoint.getY()) * coefficient) + centralPoint.getY());
+                final Point resultPoint = new Point(resultX, resultY);
+                result.add(resultPoint);
+            }
+        } else {
+            System.out.println("Figure does`nt have points");
+        }
+        return result;
+    }
+
     public void zoomFigure(double coefficient) {
         this.setPointsInsideFigure(
                 zoomCoordinates(this.getPointsInsideFigure(), coefficient));
         this.setFigureTopPoints(
                 zoomCoordinates(this.getFigureTopPoints(), coefficient));
+    }
+
+    public void zoomFigure(double coefficient, Point centralPoint) {
+        this.setPointsInsideFigure(
+                zoomCoordinates(this.getPointsInsideFigure(), coefficient, centralPoint));
+        this.setFigureTopPoints(
+                zoomCoordinates(this.getFigureTopPoints(), coefficient, centralPoint));
     }
 }

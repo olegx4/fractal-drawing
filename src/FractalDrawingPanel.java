@@ -131,6 +131,12 @@ public class FractalDrawingPanel extends JPanel {
             } else if (e.getKeyChar() == 'h') {
                 showTopPoints = !showTopPoints;
                 repaint();
+            } else if (e.getKeyChar() == 'x') {
+                figure.zoomFigure(2, new Point(getWidth() / 2, getHeight() / 2));
+                repaint();
+            } else if (e.getKeyChar() == 'X') {
+                figure.zoomFigure(0.5, new Point(getWidth() / 2, getHeight() / 2));
+                repaint();
             } else if (e.getKeyChar() == 'Z') {
                 figure.zoomFigure(2);
                 repaint();
